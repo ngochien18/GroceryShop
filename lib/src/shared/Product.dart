@@ -3,7 +3,8 @@ class Product
   String name,
         price,
         image;
-  bool userLiked;
+  bool userLiked,
+        isFood;
   double discount;
 
   Product({
@@ -11,7 +12,8 @@ class Product
     this.price,
     this.discount,
     this.image,
-    this.userLiked
+    this.userLiked,
+    this.isFood
   });
 
 }

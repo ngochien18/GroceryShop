@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fryo/src/widget/food_list.dart';
+import 'package:fryo/src/services/database.dart';
+import 'package:fryo/src/shared/Cart.dart';
+import 'package:fryo/src/widget/cart_list.dart';
+import 'package:provider/provider.dart';
 import '../shared/styles.dart';
 import '../shared/colors.dart';
 import '../shared/fryo_icons.dart';
@@ -21,80 +26,65 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     final _tabs = [
-      storeTab(context),
-      Text('Tab2'),
-      Text('Tab3'),
-      Text('Tab4'),
-      Text('Tab5'),
+      FoodList(),
+      CartList()
     ];
 
-    return Scaffold(
-        backgroundColor: bgColor,
-        appBar: AppBar(
-          centerTitle: true,
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () {},
-            iconSize: 21,
-            icon: Icon(Fryo.funnel),
-          ),
-          backgroundColor: primaryColor,
-          title:
+    return StreamProvider<List<Cart>>.value(
+      value: DatabaseService().carts,
+      child: StreamProvider<List<Product>>.value(
+        value: DatabaseService().foods,
+        child: Scaffold(
+            backgroundColor: bgColor,
+            appBar: AppBar(
+              centerTitle: true,
+              elevation: 0,
+              leading: IconButton(
+                onPressed: () {},
+                iconSize: 21,
+                icon: Icon(Fryo.funnel),
+              ),
+              backgroundColor: primaryColor,
+              title:
               Text('Fryo', style: logoWhiteStyle, textAlign: TextAlign.center),
-          actions: <Widget>[
-            IconButton(
-              padding: EdgeInsets.all(0),
-              onPressed: () {},
-              iconSize: 21,
-              icon: Icon(Fryo.magnifier),
+              actions: <Widget>[
+                IconButton(
+                  padding: EdgeInsets.all(0),
+                  onPressed: () {},
+                  iconSize: 21,
+                  icon: Icon(Fryo.magnifier),
+                ),
+                IconButton(
+                  padding: EdgeInsets.all(0),
+                  onPressed: () {},
+                  iconSize: 21,
+                  icon: Icon(Fryo.alarm),
+                )
+              ],
             ),
-            IconButton(
-              padding: EdgeInsets.all(0),
-              onPressed: () {},
-              iconSize: 21,
-              icon: Icon(Fryo.alarm),
-            )
-          ],
-        ),
-        body: _tabs[_selectedIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-                icon: Icon(Fryo.shop),
-                title: Text(
-                  'Store',
-                  style: tabLinkStyle,
-                )),
-            BottomNavigationBarItem(
-                icon: Icon(Fryo.cart),
-                title: Text(
-                  'My Cart',
-                  style: tabLinkStyle,
-                )),
-            BottomNavigationBarItem(
-                icon: Icon(Fryo.heart_1),
-                title: Text(
-                  'Favourites',
-                  style: tabLinkStyle,
-                )),
-            BottomNavigationBarItem(
-                icon: Icon(Fryo.user_1),
-                title: Text(
-                  'Profile',
-                  style: tabLinkStyle,
-                )),
-            BottomNavigationBarItem(
-                icon: Icon(Fryo.cog_1),
-                title: Text(
-                  'Settings',
-                  style: tabLinkStyle,
-                ))
-          ],
-          currentIndex: _selectedIndex,
-          type: BottomNavigationBarType.fixed,
-          fixedColor: Colors.green[600],
-          onTap: _onItemTapped,
-        ));
+            body: _tabs[_selectedIndex],
+            bottomNavigationBar: BottomNavigationBar(
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                    icon: Icon(Fryo.shop),
+                    title: Text(
+                      'Store',
+                      style: tabLinkStyle,
+                    )),
+                BottomNavigationBarItem(
+                    icon: Icon(Fryo.cart),
+                    title: Text(
+                      'My Cart',
+                      style: tabLinkStyle,
+                    )),
+              ],
+              currentIndex: _selectedIndex,
+              type: BottomNavigationBarType.fixed,
+              fixedColor: Colors.green[600],
+              onTap: _onItemTapped,
+            )),
+      ),
+    );
   }
 
   void _onItemTapped(int index) {
@@ -102,174 +92,6 @@ class _DashboardState extends State<Dashboard> {
       _selectedIndex = index;
     });
   }
-}
-
-Widget storeTab(BuildContext context) {
-
-  // will pick it up from here
-  // am to start another template
-  List<Product> foods = [
-    Product(
-        name: "Hamburger",
-        image: "images/3.png",
-        price: "\$25.00",
-        userLiked: true,
-        discount: 10),
-    Product(
-        name: "Pasta",
-        image: "images/5.png",
-        price: "\$150.00",
-        userLiked: false,
-        discount: 7.8),
-    Product(
-      name: "Akara",
-      image: 'images/2.png',
-      price: '\$10.99',
-      userLiked: false,
-    ),
-    Product(
-        name: "Strawberry",
-        image: "images/1.png",
-        price: '\$50.00',
-        userLiked: true,
-        discount: 14)
-  ];
-
-  List<Product> drinks = [
-    Product(
-        name: "Coca-Cola",
-        image: "images/6.png",
-        price: "\$45.12",
-        userLiked: true,
-        discount: 2),
-    Product(
-        name: "Lemonade",
-        image: "images/7.png",
-        price: "\$28.00",
-        userLiked: false,
-        discount: 5.2),
-    Product(
-        name: "Vodka",
-        image: "images/8.png",
-        price: "\$78.99",
-        userLiked: false),
-    Product(
-        name: "Tequila",
-        image: "images/9.png",
-        price: "\$168.99",
-        userLiked: true,
-        discount: 3.4)
-  ];
-
-  return ListView(children: <Widget>[
-    headerTopCategories(),
-    deals('Hot Deals', onViewMore: () {}, items: <Widget>[
-      foodItem(foods[0], onTapped: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return new ProductPage(
-                productData: foods[0],
-              );
-            },
-          ),
-        );
-      }, onLike: () {}),
-      foodItem(foods[1], onTapped: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return new ProductPage(
-                productData: foods[1],
-              );
-            },
-          ),
-        );
-      }, imgWidth: 250, onLike: () {
-        
-      }),
-      foodItem(foods[2], onTapped: () {
-         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return new ProductPage(
-                productData: foods[2],
-              );
-            },
-          ),
-        );
-      }, imgWidth: 200, onLike: () {
-       
-      }),
-      foodItem(foods[3], onTapped: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return new ProductPage(
-                productData: foods[3],
-              );
-            },
-          ),
-        );
-      }, onLike: () {
-        
-      }),
-    ]),
-    deals('Drinks Parol', onViewMore: () {}, items: <Widget>[
-      foodItem(drinks[0], onTapped: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return new ProductPage(
-                productData: drinks[0],
-              );
-            },
-          ),
-        );
-      }, onLike: () {}, imgWidth: 60),
-      foodItem(drinks[1], onTapped: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return new ProductPage(
-                productData: drinks[1],
-              );
-            },
-          ),
-        );
-      }, onLike: () {}, imgWidth: 75),
-      foodItem(drinks[2], onTapped: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return new ProductPage(
-                productData: drinks[2],
-              );
-            },
-          ),
-        );
-      }, imgWidth: 110, onLike: () {}),
-      foodItem(drinks[3], onTapped: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return new ProductPage(
-                productData: drinks[3],
-              );
-            },
-          ),
-        );
-      }, onLike: () {}),
-    ])
-  ]);
 }
 
 Widget sectionHeader(String headerTitle, {onViewMore}) {
@@ -285,7 +107,6 @@ Widget sectionHeader(String headerTitle, {onViewMore}) {
         margin: EdgeInsets.only(left: 15, top: 2),
         child: FlatButton(
           onPressed: onViewMore,
-          child: Text('View all ›', style: contrastText),
         ),
       )
     ],
@@ -341,30 +162,61 @@ Widget headerCategoryItem(String name, IconData icon, {onPressed}) {
   );
 }
 
-Widget deals(String dealTitle, {onViewMore, List<Widget> items}) {
+Widget dealsWith(String dealTitle, List<Product> foods) {
   return Container(
-    margin: EdgeInsets.only(top: 5),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        sectionHeader(dealTitle, onViewMore: onViewMore),
-        SizedBox(
-          height: 250,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: (items != null)
-                ? items
-                : <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(left: 15),
-                      child: Text('No items available at this moment.',
-                          style: taglineText),
-                    )
-                  ],
+      margin: EdgeInsets.only(top: 5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          sectionHeader(dealTitle),
+          SizedBox(
+              height: 250,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: foods.length,
+                itemBuilder: (context, index) {
+                  return foodItem(foods[index], onTapped: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return new ProductPage(
+                            productData: foods[index],
+                          );
+                        },
+                      ),
+                    );
+                  });
+                },
+              )
           ),
-        )
-      ],
-    ),
+        ],
+      )
+  );
+}
+
+Widget dealsWithCart(String dealTitle, List<Cart> foods) {
+  return Container(
+      margin: EdgeInsets.only(top: 5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          sectionHeader(dealTitle),
+          SizedBox(
+              height: 250,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: foods.length,
+                itemBuilder: (context, index) {
+                  return cartItem(foods[index], index, onTapped: () {
+
+                  });
+                },
+              )
+          ),
+        ],
+      )
   );
 }

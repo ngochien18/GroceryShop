@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fryo/src/services/auth.dart';
+import 'package:fryo/src/services/database.dart';
+import 'package:fryo/src/shared/Product.dart';
+import 'package:fryo/src/shared/loading.dart';
 import '../shared/styles.dart';
 import '../shared/colors.dart';
 import '../shared/inputFields.dart';
@@ -16,9 +21,17 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+
+  final AuthService _auth = AuthService();
+  bool loading = false;
+
+  String email = '';
+  String password = '';
+  String error = '';
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: white,
@@ -49,20 +62,44 @@ class _SignInPageState extends State<SignInPage> {
               children: <Widget>[
                 Text('Welcome Back!', style: h3),
                 Text('Howdy, let\'s authenticate', style: taglineText),
-                fryoTextInput('Username'),
-                fryoPasswordInput('Password'),
-                FlatButton(
-                  onPressed: () {},
-                  child: Text('Forgot Password?', style: contrastTextBold),
-                )
+                fryoTextInput('Username', onChanged: (val) {
+                  setState(() {
+                    email = val;
+                  });
+                }),
+                fryoPasswordInput('Password', onChanged: (val) {
+                  setState(() {
+                    password = val;
+                  });
+                }),
               ],
             ),
             Positioned(
               bottom: 15,
               right: -15,
               child: FlatButton(
-                onPressed: () {
+                onPressed: () async {
+                  setState(() {
+                    loading = true;
+                  });
+                  dynamic result = await _auth.signInEmailAndPassword(email.trim(), password);
+                  if (result == null) {
+                    setState(() {
+                      loading = false;
+                      error = 'please enter valid field';
+                    });
+                    Fluttertoast.showToast(
+                        msg: error,
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0
+                    );
+                  } else {
                     Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child: Dashboard()));
+                  }
                 },
                 color: primaryColor,
                 padding: EdgeInsets.all(13),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fryo/src/services/database.dart';
 import '../shared/Product.dart';
 import '../shared/styles.dart';
 import '../shared/colors.dart';
@@ -19,6 +20,7 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   double _rating = 4;
   int _quantity = 1;
+  String error = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,11 +118,17 @@ class _ProductPageState extends State<ProductPage> {
                           ),
                           Container(
                             width: 180,
-                            child: froyoOutlineBtn('Buy Now', () {}),
+                            child: froyoFlatBtn('Add to Cart', () async {
+                              await DatabaseService().addCart(widget.productData, _quantity);
+                              setState(() {
+                                error = 'Add to Cart Successfully!';
+                              });
+                            }),
                           ),
-                          Container(
-                            width: 180,
-                            child: froyoFlatBtn('Add to Cart', () {}),
+                          SizedBox(height: 12.0,),
+                          Text(
+                            error,
+                            style: TextStyle(color: Colors.green, fontSize: 14.0),
                           )
                         ],
                       ),

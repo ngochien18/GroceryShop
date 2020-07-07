@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "306391882021",
+    "firebase_url": "https://resturant-98bc5.firebaseio.com",
+    "project_id": "resturant-98bc5",
+    "storage_bucket": "resturant-98bc5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306391882021:android:f57a1a358b8876f49422cc",
+        "android_client_info": {
+          "package_name": "com.example.fryo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "306391882021-oe10qqdb63n4ndvjfsckgcps5r3k9e3r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fryo",
+            "certificate_hash": "073348b23f852b25388128e2b7f9f4567d3e9c77"
+          }
+        },
+        {
+          "client_id": "306391882021-le11h1jvblt93flf9ntf77kv824rb628.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbV3y9cEercxZyNEj8naF9aVRiB66wdxM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "306391882021-le11h1jvblt93flf9ntf77kv824rb628.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
